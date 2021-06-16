@@ -25,10 +25,15 @@ def strip_accents(w: str) -> str:
         c for c in unicodedata.normalize("NFD", w)
         if unicodedata.category(c) != "Mn")
 
-def get_orcid(x):
-    x = x.replace('http://', 'https://')
-    x = x.replace('https://orcid.org/', '')
-    return x.upper()
+def get_orcid(x: str) -> str:
+    ans = x
+    for s in x.split('/'):
+        v = s.strip()
+        if len(v) == 19:
+            ans = v
+        if len(v) == 16:
+            ans = '-'.join([v[0:4], v[4:8], v[8:12], v[12:16]])
+    return ans.upper()
 
 def get_doi(x):
     x = x.split('.org/')[-1]

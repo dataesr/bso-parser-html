@@ -13,3 +13,4 @@ python-swiftclient==3.9.0
 Unidecode==1.0.22
 beautifulsoup4==4.8.2
 lxml==3.8.0
+jsonschema==3.2.0

@@ -1,12 +1,28 @@
 import copy
+import json
 from bs4 import BeautifulSoup
 from project.server.main.doi_parser_mapping import MAPPING
 import project.server.main.parsers as parsers
+from project.server.main.logger import get_logger
+from jsonschema import exceptions, validate
+    
+schema = json.load(open('/src/project/server/main/schema.json', 'r'))
+
+logger = get_logger()
 
 def is_empty(res):
     if len(res) <= 1:
         return True
     return False
+
+def validate_json_schema(datum: object, schema: dict) -> bool:
+    is_valid = True
+    try:
+        validate(instance=datum, schema=schema)
+    except exceptions.ValidationError as error:
+        is_valid = False
+        logger.debug(error)
+    return is_valid
 
 def need_parsing(html):
     if html[0:4] == "%PDF":
@@ -20,9 +36,11 @@ def need_parsing(html):
     return True
 
 def parse(doi, html, publisher=None):
-    print(f"PARSER -- parsing {doi}", flush=True)
+    logger.debug(f"PARSER -- parsing {doi}")
     res = {
-        'doi': doi
+        'doi': doi,
+        'url': f'http://doi.org/{doi}',
+        'sources': ['html']
     }
     if not need_parsing(html):
         return res
@@ -31,14 +49,16 @@ def parse(doi, html, publisher=None):
     soup = BeautifulSoup(html, 'lxml')
     if exec:
         try:
-            print(f"PARSER -- exec {exec.get('func')}", flush=True)
+            logger.debug(f"PARSER -- exec {exec.get('func')}")
             res = exec.get('func')(soup, doi)
         except Exception as e:
-            print(f"PARSER -- FAILED {e}", flush=True)
+            logger.debug(f"PARSER -- FAILED {e}")
             # soup2 = BeautifulSoup(html, 'html.parser')
             # res = exec.get('func')(soup2)
     res = apply_fallbacks(doi, soup, res)
     res = post_treat(doi, soup, res)
+    is_valid = validate_json_schema(datum = res, schema=schema)
+    logger.debug(f"is valid {is_valid}")
     return res
 
 def apply_fallbacks(doi, soup, current_res):
