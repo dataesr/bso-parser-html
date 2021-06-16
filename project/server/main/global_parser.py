@@ -37,7 +37,7 @@ def need_parsing(html):
 
 def parse(doi, html, publisher=None):
     logger.debug(f"PARSER -- parsing {doi}")
-    res = {
+    res_base = {
         'doi': doi,
         'url': f'http://doi.org/{doi}',
         'sources': ['html']
@@ -57,6 +57,7 @@ def parse(doi, html, publisher=None):
             # res = exec.get('func')(soup2)
     res = apply_fallbacks(doi, soup, res)
     res = post_treat(doi, soup, res)
+    res.update(res_base)
     is_valid = validate_json_schema(datum = res, schema=schema)
     logger.debug(f"is valid {is_valid}")
     return res
