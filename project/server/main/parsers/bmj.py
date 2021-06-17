@@ -96,6 +96,6 @@ def parse_abstract(soup):
         if abstract:
             abstracts.append(abstract)
     if abstracts:
-        res['abstracts'] = abstracts
+        res['abstract'] = abstracts
 
     return res

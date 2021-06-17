@@ -131,7 +131,7 @@ def parse_abstract(soup):
         if abstract:
             abstracts.append(abstract)
     if abstracts:
-        res['abstracts'] = abstracts
+        res['abstract'] = abstracts
         
 
         
@@ -163,8 +163,8 @@ def parse_abstract(soup):
         
     for e in soup.find_all(class_="NLM_fn"):
         if "Funding" in get_clean_text(e):
-            res['fundings'] = [{'funding': get_clean_text(e).replace('Funding',"").strip()}]
-   
+            res['grants'] = [{'grant': get_clean_text(e).replace('Funding',"").strip()}]
+            res['has_grant'] = True
     return res
 
 

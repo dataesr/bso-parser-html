@@ -63,7 +63,8 @@ def parse_references(soup):
     next_p = e.findNext('p')
     if next_p:
         funding = get_clean_text(next_p)
-        res['fundings'] = [{'funding':funding}]
+        res['grants'] = [{'grant':funding}]
+        res['has_grant'] = True
 
     references = []
     for ref_elem in soup.find_all(class_="References"):

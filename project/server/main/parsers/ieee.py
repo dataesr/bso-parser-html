@@ -56,6 +56,7 @@ def parse_authors(soup):
 
     for ix, a in enumerate(authors):
         a['author_position'] = ix+1
+        a['full_name'] = (a.get('first_name', '') + ' ' + a.get('last_name', '')).strip()
 
     if affiliations:
         res['affiliations'] = affiliations
@@ -95,7 +96,7 @@ def parse_abstract(soup):
         res["conference_date"] = data["conferenceDate"]
 
     if 'articleId' in data and data['articleId']:
-        res['external_ids'] = [{"ieee": data['articleId']}]
+        res['external_ids'] = [{"id_value": data['articleId'], "id_type": "ieee"}]
 
     if 'onlineDate' in data and data['onlineDate']:
         res['online_date'] = data['onlineDate']

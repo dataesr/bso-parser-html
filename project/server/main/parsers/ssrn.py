@@ -33,7 +33,7 @@ def parse_abstract(soup):
         if abstract:
             abstracts.append(abstract)
     if abstracts:
-        res['abstracts'] = abstracts
+        res['abstract'] = abstracts
 
     keywords = []
     for e in soup.find_all('strong'):

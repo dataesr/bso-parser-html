@@ -5,6 +5,9 @@ import gzip
 from io import BytesIO, TextIOWrapper
 import os
 import hashlib
+from project.server.main.logger import get_logger
+
+logger = get_logger()
 
 user = "{}:{}".format(os.getenv("OS_TENANT_NAME"), os.getenv("OS_USERNAME"))
 key = os.getenv("OS_PASSWORD")
@@ -46,11 +49,11 @@ def get_data_from_ovh(doi=None, filename = None, container = "landing-page-html"
     if doi:
         filename = get_filename(doi)
     if exists_in_storage(container, filename) is False:
-        print("ERROR : missing file", flush=True)
+        logger.debug("ERROR : missing file")
         return {}
 
     if filename is None:
-        print("ERROR : missing doi or filename", flush=True)
+        logger.debug("ERROR : missing file")
         return {}
     df_notice = pd.read_json(BytesIO(conn.get_object(container, filename)[1]), compression='gzip')
     return df_notice.to_dict(orient="records")[0]

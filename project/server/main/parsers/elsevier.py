@@ -54,11 +54,15 @@ def parse_authors(soup):
         if current_affiliation:
             affiliations_dict[aff_id] = current_affiliation
 
+    footnotes = []
     for footnote in js.get('authors', {}).get('footnotes', []):
         aff_id = footnote.get("$", {}).get('id')
         for k in footnote.get('$$', []):
             if k.get("#name") in ['note-para']:
-                affiliations_dict[aff_id] = {'footnote': get_value(k)}
+                new_footnote = {'footnote': get_value(k)}
+                if new_footnote not in footnotes:
+                    footnotes.append(new_footnote)
+                #affiliations_dict[aff_id] = {'footnote': get_value(k)}
 
     authors=[]
     for aut in js.get('authors', {}).get('content', []):
@@ -97,12 +101,15 @@ def parse_authors(soup):
 
     for ix, a in enumerate(authors):
         a['author_position'] = ix+1
+        a['full_name'] = (a.get('first_name', '') + ' ' + a.get('last_name', '')).strip()
 
     res = {}
     if affiliations:
         res['affiliations'] = affiliations
     if authors:
         res['authors'] = authors
+    if footnotes:
+        res['footnotes'] = footnotes
     return res
 
 

@@ -61,7 +61,7 @@ def parse_abstract(soup):
     res = {}
     abstract_elem = soup.find(class_="articleBody_abstractText")
     if abstract_elem:
-        res['abstract'] = {'abstract': get_clean_text(abstract_elem)}
+        res['abstract'] = [{'abstract': get_clean_text(abstract_elem)}]
 
     images = []
     img_elem = soup.find(class_="article_abstract-img")

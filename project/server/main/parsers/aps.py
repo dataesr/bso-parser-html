@@ -79,7 +79,7 @@ def parse_abstract(soup):
         # abstract
         abstract_text_elem = abstract_elem.find('p')
         if abstract_text_elem:
-            res['abstract'] = {'abstract': get_clean_text(abstract_text_elem)}
+            res['abstract'] = [{'abstract': get_clean_text(abstract_text_elem)}]
 
         # images
         images = []

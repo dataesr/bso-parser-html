@@ -78,14 +78,17 @@ def parse_authors(soup):
                     if aff_name in aff_elt_addr.attrs['content']:
                         aff_name = ''
                     addr_elts = aff_elt_addr.attrs['content'].split(',')
+                    external_ids = []
                     for add in addr_elts:
                         if 'grid.' in add:
-                            current_affiliation['grid'] = add.strip()
+                            external_ids.append({'id_type': 'grid', 'id_value': add.strip()})
                         elif re.search("([0-9A-Z]{4}(.)?){4}", add):
-                            current_affiliation['isni'] = add.strip()
+                            external_ids.append({'id_type': 'isni', 'id_value': add.strip()})
                         else:
                             aff_name+=" "+add.strip()
                             aff_name = aff_name.strip()
+                    if external_ids:
+                        current_affiliation['external_ids'] = external_ids
                 if aff_name:
                     current_affiliation['name'] = aff_name
                 if current_affiliation:

@@ -45,7 +45,7 @@ def parse_authors(soup):
             if aff not in affiliations:
                 affiliations.append(aff)
         if current_affiliations:
-            author['current_affiliations'] = current_affiliations
+            author['affiliations'] = current_affiliations
 
 
         if author:
@@ -70,7 +70,7 @@ def parse_abstract(soup):
         if abstract:
             abstracts.append(abstract)
     if abstracts:
-        res['abstracts'] = abstracts
+        res['abstract'] = abstracts
 
     keywords = []
     for k in soup.find_all('a', href = re.compile('f_SemanticFilterTopics|keyword')):

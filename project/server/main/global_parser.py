@@ -47,6 +47,7 @@ def parse(doi, html, publisher=None):
 
     exec = MAPPING.get(doi[0:7])
     soup = BeautifulSoup(html, 'lxml')
+    res = {}
     if exec:
         try:
             logger.debug(f"PARSER -- exec {exec.get('func')}")
@@ -93,5 +94,8 @@ def post_treat(doi, soup, current_res):
             if current_affiliations:
                 a['affiliations'] = current_affiliations
     
+    has_grant = current_res.get('has_grant', False)
+    current_res['has_grant'] = has_grant
+
     return current_res
 

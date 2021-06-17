@@ -51,5 +51,5 @@ def parse_abstract(soup):
     if abstract_soup:
         abstract = get_clean_text(abstract_soup)
         if abstract:
-            res["abstracts"] = [ {"abstract": abstract} ]
+            res["abstract"] = [ {"abstract": abstract} ]
     return res

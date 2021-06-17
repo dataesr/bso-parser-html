@@ -33,7 +33,7 @@ def parse_authors(soup):
                 for aff in info.find_all("a"):
                     if aff and aff.get("href", "").startswith("mailto"):
                         doc["email"] = get_clean_text(aff)
-                        doc["cooresponding"] = True
+                        doc["corresponding"] = True
                     if aff and "orcid" in aff.get("href", ""):
                         doc["orcid"] = get_orcid(get_clean_text(aff['href']))
                 for aff in info.find_all("p"):
