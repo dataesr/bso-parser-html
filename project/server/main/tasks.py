@@ -1,5 +1,6 @@
 import time
 import requests
+import os
 from project.server.main.global_parser import parse
 from project.server.main.utils_swift import get_data_from_ovh, get_filename, exists_in_storage, set_objects
 from project.server.main.logger import get_logger
