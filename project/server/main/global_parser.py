@@ -60,7 +60,9 @@ def parse(doi, html, publisher=None):
     res = post_treat(doi, soup, res)
     res.update(res_base)
     is_valid = validate_json_schema(datum = res, schema=schema)
-    logger.debug(f"is valid {is_valid}")
+    if is_valid is False:
+        logger.error(f"invalid schema for {doi}")
+        print(f"invalid schema for {doi}" + ttt, flush=True)
     return res
 
 def apply_fallbacks(doi, soup, current_res):

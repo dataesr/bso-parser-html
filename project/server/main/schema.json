@@ -182,6 +182,12 @@
                                 "address-line": {
                                     "type": "string"
                                 },
+                    		"detected_countries": {
+                        	    "type": "array",
+                                    "items": {
+                                        "type": "string"
+				    }
+				},
                     		"external_ids": {
                         	    "type": "array",
                                     "items": {
@@ -205,6 +211,12 @@
                 "required": ["full_name"]
             }
         },
+        "detected_countries": {
+            "type": "array",
+            "items": {
+                "type": "string"
+	    }
+	},
         "affiliations": {
             "type": "array",
             "items": {
@@ -225,6 +237,12 @@
                     "address-line": {
                         "type": "string"
                     },
+                    "detected_countries": {
+                        "type": "array",
+                            "items": {
+                                "type": "string"
+			}
+		    },
                     "external_ids": {
                         "type": "array",
                          "items": {
