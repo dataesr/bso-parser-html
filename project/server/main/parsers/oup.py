@@ -35,7 +35,7 @@ def parse_authors(soup):
             author['corresponding'] = True
             author['email'] = a_elem['href'].replace('mailto:', '')
 
-        a_elem = elt.find("a", href=re.compile('orcid'))
+        a_elem = elt.find("a", href=re.compile('orcid.org/'))
         if a_elem:
             author['orcid'] = get_orcid(a_elem['href'])
 
