@@ -59,11 +59,11 @@ def parse_abstract(soup):
 
     elem = soup.find('meta', {"name": "citation_online_date"})
     if elem and 'content' in elem.attrs:
-        res['online_date'] = elem['content']
+        res['online_date'] = str(elem['content'])
 
     elem = soup.find('meta', {"name": "citation_publication_date"})
     if elem and 'content' in elem.attrs:
-        res['publication_date'] = elem['content']
+        res['publication_date'] = str(elem['content'])
     
     elem = soup.find('meta', {"name": "citation_conference_title"})
     if elem and 'content' in elem.attrs:

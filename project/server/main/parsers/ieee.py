@@ -93,13 +93,13 @@ def parse_abstract(soup):
         res["conference_location"] = data["confLoc"]
 
     if 'conferenceDate' in data and data["conferenceDate"]:
-        res["conference_date"] = data["conferenceDate"]
+        res["conference_date"] = str(data["conferenceDate"])
 
     if 'articleId' in data and data['articleId']:
         res['external_ids'] = [{"id_value": data['articleId'], "id_type": "ieee"}]
 
     if 'onlineDate' in data and data['onlineDate']:
-        res['online_date'] = data['onlineDate']
+        res['online_date'] = str(data['onlineDate'])
 
     return res
 

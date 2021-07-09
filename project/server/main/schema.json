@@ -20,7 +20,7 @@
         },
         "doi": {
             "type": "string",
-            "pattern": "^10\\.\\d{4,9}/[-._;()/:a-zA-Z0-9]+$"
+            "pattern": "^10\\.*"
         },
         "external_ids": {
             "type": "array",
@@ -83,7 +83,7 @@
 		    },
                     "doi": {
                         "type": "string",
-            		"pattern": "^10\\.\\d{4,9}/[-._;()/:a-zA-Z0-9]+$"
+                        "pattern": "^10\\.*"
 		    },
 		    "link": {
 			"type": "string",

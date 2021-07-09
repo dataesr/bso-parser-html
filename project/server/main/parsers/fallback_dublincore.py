@@ -47,6 +47,6 @@ def parse_abstract(soup):
 
     elem = soup.find('meta', {"name": "DC.date"})
     if elem and 'content' in elem.attrs:
-        res['publication_date'] = elem['content']
+        res['publication_date'] = str(elem['content'])
     
     return res
