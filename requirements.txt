@@ -1,8 +1,8 @@
 requests==2.19.1
 pandas==0.25.3
 regex==2017.4.5
-redis==3.3.11
-rq==1.1.0
+redis==3.5.3
+rq==1.9.0
 Flask==1.1.1
 Flask-Bootstrap==3.3.7.1
 Flask-Testing==0.7.1
