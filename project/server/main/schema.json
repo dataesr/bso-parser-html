@@ -188,6 +188,12 @@
                                         "type": "string"
 				    }
 				},
+                    		"grid": {
+                        	    "type": "array",
+                                    "items": {
+                                        "type": "string"
+				    }
+				},
                     		"external_ids": {
                         	    "type": "array",
                                     "items": {
@@ -238,6 +244,12 @@
                         "type": "string"
                     },
                     "detected_countries": {
+                        "type": "array",
+                            "items": {
+                                "type": "string"
+			}
+		    },
+                    "grid": {
                         "type": "array",
                             "items": {
                                 "type": "string"
