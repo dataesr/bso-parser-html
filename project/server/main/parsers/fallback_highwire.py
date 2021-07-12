@@ -58,11 +58,11 @@ def parse_abstract(soup):
         res["keywords"] = keywords
 
     elem = soup.find('meta', {"name": "citation_online_date"})
-    if elem and 'content' in elem.attrs:
+    if elem and 'content' in elem.attrs and len(str(elem['content'])) >= 8:
         res['online_date'] = str(elem['content'])
 
     elem = soup.find('meta', {"name": "citation_publication_date"})
-    if elem and 'content' in elem.attrs:
+    if elem and 'content' in elem.attrs and len(str(elem['content'])) >= 8:
         res['publication_date'] = str(elem['content'])
     
     elem = soup.find('meta', {"name": "citation_conference_title"})

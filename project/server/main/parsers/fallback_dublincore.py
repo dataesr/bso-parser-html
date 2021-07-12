@@ -46,7 +46,7 @@ def parse_abstract(soup):
         res["keywords"] = keywords
 
     elem = soup.find('meta', {"name": "DC.date"})
-    if elem and 'content' in elem.attrs:
+    if elem and 'content' in elem.attrs and len(str(elem['content'])) >= 8:
         res['publication_date'] = str(elem['content'])
     
     return res
