@@ -38,7 +38,9 @@ def get_orcid(x: str) -> str:
 def get_doi(x):
     x = x.split('.org/')[-1]
     x = x.split('#')[0]
-    return x.lower()
+    if x[0:3] == '10.':
+        return x.lower()
+    return None
 
 def delete_punct(w: str) -> str:
     """Delete all puctuation in a string."""
