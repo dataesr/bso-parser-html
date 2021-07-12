@@ -95,7 +95,7 @@ def post_treat(doi, soup, current_res):
     has_grant = current_res.get('has_grant', False)
     current_res['has_grant'] = has_grant
 
-    for r in x.get('references', []):
+    for r in current_res.get('references', []):
         if 'doi' in r and (not r['doi']):
             del r['doi']
     return current_res
