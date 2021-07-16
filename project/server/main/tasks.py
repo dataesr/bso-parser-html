@@ -13,6 +13,27 @@ FRENCH_ALPHA2 = ["fr", "gp", "gf", "mq", "re", "yt", "pm", "mf", "bl", "wf", "tf
 
 logger = get_logger()
 
+
+def get_matcher_results(publications: list, countries_to_keep: list) -> list:
+    r = requests.post(matcher_endpoint_url, json={'publications': publications, 'countries_to_keep': countries_to_keep})
+    task_id = r.json()['data']['task_id']
+    logger.debug(f"new task {task_id} for matcher")
+    for i in range(0, 10000):
+        r_task = requests.get(f"{AFFILIATION_MATCHER_SERVICE}/tasks/{task_id}").json()
+        try:
+            status = r_task['data']['task_status']
+        except:
+            logger.error(f"error in getting task {task_id} status : {r_task}")
+            status = "error"
+        if status == "finished":
+            return r_task['data']['task_result']
+        elif status in ["started", "queued"]:
+            time.sleep(2)
+            continue
+        else:
+            logger.error(f"error with task {task_id} : status {status}")
+            return []
+
 def create_task_parse(arg):
     doi = arg.get('doi')
     filename = arg.get('filename')
@@ -31,13 +52,14 @@ def create_task_parse(arg):
                 parsed = parse(download_data_html.get('doi'), download_data_html.get('notice'))
                 all_parsed = [parsed]
     
-                publications_with_countries = requests.post(matcher_endpoint_url, json={'publications': all_parsed, 'countries_to_keep': FRENCH_ALPHA2}).json()
+                #publications_with_countries = requests.post(matcher_endpoint_url, json={'publications': all_parsed, 'countries_to_keep': FRENCH_ALPHA2}).json()
+                publications_with_countries = get_matcher_results(publications=all_parsed, countries_to_keep=FRENCH_ALPHA2)
                 all_parsed = publications_with_countries['publications']
                 all_parsed_filtered = publications_with_countries['filtered_publications']
 
                 set_objects(all_parsed, "parsed", filename)
                 if all_parsed_filtered:
-                    set_objects(all_parsed_filtered, "parsed", "fr/"+filename)
+                    set_objects(all_parsed_filtered, "parsed_fr", filename)
                 return parsed
             else:
                 logger.debug("should crawl first")
