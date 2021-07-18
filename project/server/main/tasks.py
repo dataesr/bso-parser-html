@@ -15,7 +15,7 @@ logger = get_logger()
 
 
 def get_matcher_results(publications: list, countries_to_keep: list) -> list:
-    r = requests.post(matcher_endpoint_url, json={'publications': publications, 'countries_to_keep': countries_to_keep})
+    r = requests.post(matcher_endpoint_url, json={'publications': publications, 'countries_to_keep': countries_to_keep, 'queue': 'matcher_short'})
     task_id = r.json()['data']['task_id']
     logger.debug(f"new task {task_id} for matcher")
     for i in range(0, 10000):
