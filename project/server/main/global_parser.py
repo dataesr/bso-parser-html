@@ -41,13 +41,13 @@ def parse(doi: str, html: str):
     }
     if not need_parsing(html=html):
         return res_base
-    exec = MAPPING.get(doi[0:7])
+    _exec = MAPPING.get(doi[0:7])
     soup = BeautifulSoup(html, 'lxml')
     res = {}
-    if exec:
+    if _exec:
         try:
-            logger.debug(f"PARSER -- exec {exec.get('func')}")
-            res = exec.get('func')(soup, doi)
+            logger.debug(f"PARSER -- exec {_exec.get('func')}")
+            res = _exec.get('func')(soup, doi)
         except Exception as e:
             logger.debug(f'PARSER -- FAILED {e}')
     res = apply_fallbacks(doi=doi, soup=soup, current_res=res)
@@ -60,10 +60,10 @@ def parse(doi: str, html: str):
 
 
 def apply_fallbacks(doi, soup, current_res):
-    exec = MAPPING.get(doi[0:7], {})
+    _exec = MAPPING.get(doi[0:7], {})
     func_fallbacks = []
-    if 'cbs' in exec:
-        func_fallbacks += exec.get('cbs', [])
+    if 'cbs' in _exec:
+        func_fallbacks += _exec.get('cbs', [])
     func_fallbacks += [parsers.parse_fallback_highwire, parsers.parse_fallback_dublincore, parsers.parse_fallback_tags]
     for func in func_fallbacks:
         res = func(soup, doi)

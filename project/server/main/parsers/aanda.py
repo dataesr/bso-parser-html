@@ -1,5 +1,6 @@
 import re, bs4
-from project.server.main.parsers.strings import get_clean_text, keep_digits
+
+from project.server.main.parsers.strings import get_clean_text
 
 
 # doi 10.1051
@@ -8,6 +9,7 @@ def parse_aanda(soup, doi):
     res.update(parse_authors(soup))
     res.update(parse_abstract(soup))
     return res
+
 
 def parse_authors(soup):
     res = {}
