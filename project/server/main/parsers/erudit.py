@@ -32,7 +32,7 @@ def parse_authors(soup):
         current_affil = {'name': get_clean_text(author_elem)}
         if current_affil not in affiliations:
             affiliations.append(current_affil)
-        author['affiliations'] = current_affil
+        author['affiliations'] = [current_affil]
 
         if author:
             authors.append(author)
