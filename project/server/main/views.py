@@ -11,7 +11,6 @@ from project.server.main.utils_swift import conn
 main_blueprint = Blueprint('main', __name__,)
 logger = get_logger(__name__)
 REDIS_QUEUE = 'parser'
-REDIS_URL = current_app.config['REDIS_URL']
 
 
 @main_blueprint.route('/', methods=['GET'])
@@ -23,7 +22,7 @@ def home():
 def run_task_parse():
     args = request.get_json(force=True)
     logger.debug(args)
-    with Connection(redis.from_url(REDIS_URL)):
+    with Connection(redis.from_url(current_app.config['REDIS_URL'])):
         q = Queue(REDIS_QUEUE, default_timeout=21600)
         task = q.enqueue(create_task_parse, args)
     response_object = {
