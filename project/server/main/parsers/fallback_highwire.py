@@ -74,7 +74,7 @@ def parse_abstract(soup):
 def parse_authors(soup):
     res = {}
     authors, affiliations = [], []
-    author, current_affiliations = None, None
+    author, current_affiliations = None, []
     for meta in soup.find_all('meta'):
         if meta.attrs.get('name') == "citation_author":
             if author and current_affiliations:
