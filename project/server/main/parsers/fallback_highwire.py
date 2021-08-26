@@ -95,7 +95,7 @@ def parse_authors(soup):
                 author['corresponding'] = True
             elif author_enrichment == "orcid":
                 author[author_enrichment] = get_orcid(meta.attrs.get('content'))
-            else:
+            elif meta and meta.attrs:
                 author[author_enrichment] = meta.attrs.get('content')
 
     if author and current_affiliations:
