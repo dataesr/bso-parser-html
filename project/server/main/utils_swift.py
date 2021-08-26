@@ -3,6 +3,7 @@ import hashlib
 import os
 import pandas as pd
 import swiftclient
+from retry import retry
 
 from io import BytesIO, TextIOWrapper
 
@@ -29,6 +30,7 @@ conn = swiftclient.Connection(
 )
 
 
+@retry(delay=2, tries=50)
 def exists_in_storage(container, filename):
     try:
         conn.head_object(container, filename)
@@ -49,6 +51,7 @@ def get_filename(doi):
     return filename
 
 
+@retry(delay=2, tries=50)
 def get_data_from_ovh(doi=None, filename=None, container='landing-page-html'):
     if doi:
         filename = get_filename(doi)
@@ -62,6 +65,7 @@ def get_data_from_ovh(doi=None, filename=None, container='landing-page-html'):
     return df_notice.to_dict(orient='records')[0]
 
 
+@retry(delay=2, tries=50)
 def get_objects(container, path):
     try:
         df = pd.read_json(BytesIO(conn.get_object(container, path)[1]), compression='gzip')
@@ -70,6 +74,7 @@ def get_objects(container, path):
     return df.to_dict('records')
 
 
+@retry(delay=2, tries=50)
 def set_objects(all_objects, container, path):
     logger.debug(f'Setting object {container} {path}')
     if isinstance(all_objects, list):
@@ -84,6 +89,7 @@ def set_objects(all_objects, container, path):
     return
 
 
+@retry(delay=2, tries=50)
 def delete_folder(cont_name, folder):
     cont = conn.get_container(cont_name)
     for n in [e['name'] for e in cont[1] if folder in e['name']]:
