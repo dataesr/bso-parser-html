@@ -32,26 +32,32 @@ def need_parsing(html: str) -> bool:
         return True
 
 
-def parse(doi: str, html: str):
+def parse(doi: str, html: str, json: dict):
     logger.debug(f'PARSER -- parsing {doi}')
+    res = {}
     res_base = {
         'doi': doi,
         'url': f'http://doi.org/{doi}',
-        'sources': ['html']
     }
-    if not need_parsing(html=html):
-        return res_base
-    _exec = MAPPING.get(doi[0:7])
-    soup = BeautifulSoup(html, 'lxml')
-    res = {}
-    if _exec:
-        try:
-            logger.debug(f"PARSER -- exec {_exec.get('func')}")
-            res = _exec.get('func')(soup, doi)
-        except Exception as e:
-            logger.debug(f'PARSER -- FAILED {e}')
-    res = apply_fallbacks(doi=doi, soup=soup, current_res=res)
-    res = post_treat(current_res=res)
+    if json:
+        res_base['sources'] = ['json']
+        res_base.update(json)
+    else:
+        res_base['sources'] = ['html']
+
+    if html:
+        if not need_parsing(html=html):
+            return res_base
+        _exec = MAPPING.get(doi[0:7])
+        soup = BeautifulSoup(html, 'lxml')
+        if _exec:
+            try:
+                logger.debug(f"PARSER -- exec {_exec.get('func')}")
+                res = _exec.get('func')(soup, doi)
+            except Exception as e:
+                logger.debug(f'PARSER -- FAILED {e}')
+        res = apply_fallbacks(doi=doi, soup=soup, current_res=res)
+        res = post_treat(current_res=res)
     res.update(res_base)
     is_valid = validate_json_schema(datum=res, _schema=schema)
     if not is_valid:

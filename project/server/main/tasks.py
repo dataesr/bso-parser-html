@@ -48,33 +48,39 @@ def get_matcher_results(publications: list, countries_to_keep: list) -> list:
             logger.error(f'Error with task {task_id} : status {status}')
             return []
 
+def handle_parsing(doi, html, filename, json, destination_storage):
+    parsed = parse(doi=doi, html=html, json=json)
+    all_parsed = [parsed]
+    publications_with_countries = get_matcher_results(publications=all_parsed,
+                                                      countries_to_keep=FRENCH_ALPHA2)
+    all_parsed = publications_with_countries['publications']
+    all_parsed_filtered = publications_with_countries['filtered_publications']
+    set_objects(all_parsed, destination_storage, filename)
+    if all_parsed_filtered:
+        set_objects(all_parsed_filtered, f'{destination_storage}_fr', filename)
+    return all_parsed
 
 def create_task_parse(arg):
     doi = arg.get('doi')
     filename = arg.get('filename')
-    if doi is None and filename is None:
-        return {'status': 'missing doi or filename'}
+    json = arg.get('json')
+    if doi is None and filename is None and json is None:
+        return {'status': 'missing doi or filename or json'}
     if doi:
         doi = doi.lower()
         filename = get_filename(doi)
-    force = arg.get('force', False) 
-    if filename:
+    force = arg.get('force', False)
+    if json:
+        if isinstance(json, str):
+            json = json.loads(json)
+        return handle_parsing(doi=doi, html=None, filename=filename, json=json, destination_storage='crossref')
+    elif filename:
         if force is False and exists_in_storage('parsed', filename) is True:
             return {'status': 'already parsed'}
         else:
             download_data_html = get_data_from_ovh(filename=filename, container='landing-page-html')
             if download_data_html:
-                parsed = parse(doi=download_data_html.get('doi'), html=download_data_html.get('notice'))
-                all_parsed = [parsed]
-                publications_with_countries = get_matcher_results(publications=all_parsed,
-                                                                  countries_to_keep=FRENCH_ALPHA2)
-                all_parsed = publications_with_countries['publications']
-                all_parsed_filtered = publications_with_countries['filtered_publications']
-
-                set_objects(all_parsed, 'parsed', filename)
-                if all_parsed_filtered:
-                    set_objects(all_parsed_filtered, 'parsed_fr', filename)
-                return parsed
+                return handle_parsing(doi=download_data_html.get('doi'), html=download_data_html.get('notice'), filename=filename, json=None, destination_storage='parsed')
             else:
                 logger.debug('Should crawl first')
                 return {'status': 'missing html'}
