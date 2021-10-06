@@ -90,12 +90,14 @@ def parse_authors(soup):
                 current_affiliations.append(current_affiliation)
                 if current_affiliation not in affiliations:
                     affiliations.append(current_affiliation)
-            elif author_enrichment == "email":
+            elif author and author_enrichment == "email":
                 author[author_enrichment] = meta.attrs.get('content')
                 author['corresponding'] = True
-            elif author_enrichment == "orcid":
+            elif author and author_enrichment == "orcid":
                 author[author_enrichment] = get_orcid(meta.attrs.get('content'))
             elif meta and meta.attrs:
+                if author is None:
+                    author = {}
                 author[author_enrichment] = meta.attrs.get('content')
 
     if author and current_affiliations:
