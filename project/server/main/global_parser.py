@@ -41,6 +41,15 @@ def parse(doi: str, html: str, json: dict):
     }
     if json:
         res_base['sources'] = ['json']
+        author_field_correspondance = {'affiliation': 'affiliations', 'given': 'first_name', 'family': 'last_name'}
+        authors = json.get('authors', [])
+        if authors:
+            for author in authors:
+                for field in author_field_correspondance:
+                    if field in author:
+                        new_field = field_correspondance[field]
+                        author[new_field] = author[field]
+                        del author[field]
         res_base.update(json)
     else:
         res_base['sources'] = ['html']
