@@ -31,7 +31,6 @@ def need_parsing(html: str) -> bool:
     else:
         return True
 
-
 def parse(doi: str, html: str, json: dict):
     logger.debug(f'PARSER -- parsing {doi}')
     res = {}
@@ -44,12 +43,15 @@ def parse(doi: str, html: str, json: dict):
         author_field_correspondance = {'affiliation': 'affiliations', 'given': 'first_name', 'family': 'last_name'}
         authors = json.get('authors', [])
         if authors:
-            for author in authors:
+            for ix, author in enumerate(authors):
                 for field in author_field_correspondance:
                     if field in author:
                         new_field = author_field_correspondance[field]
                         author[new_field] = author[field]
                         del author[field]
+                author['author_position'] = ix + 1
+                if 'sequence' in author:
+                    del author['sequence']
         res_base.update(json)
     else:
         res_base['sources'] = ['html']
