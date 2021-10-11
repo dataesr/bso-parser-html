@@ -2,6 +2,7 @@ import json
 
 from bs4 import BeautifulSoup
 from jsonschema import exceptions, validate
+from project.server.main.parsers.strings import get_orcid
 
 from project.server.main.doi_parser_mapping import MAPPING
 from project.server.main.logger import get_logger
@@ -40,7 +41,7 @@ def parse(doi: str, html: str, json: dict):
     }
     if json:
         res_base['sources'] = ['json']
-        author_field_correspondance = {'affiliation': 'affiliations', 'given': 'first_name', 'family': 'last_name'}
+        author_field_correspondance = {'affiliation': 'affiliations', 'given': 'first_name', 'family': 'last_name', 'ORCID': 'orcid'}
         authors = json.get('authors', [])
         if authors:
             for ix, author in enumerate(authors):
@@ -52,6 +53,17 @@ def parse(doi: str, html: str, json: dict):
                 author['author_position'] = ix + 1
                 if 'sequence' in author:
                     del author['sequence']
+                full_name = ''
+                if author.get('first_name'):
+                    full_name += author.get('first_name').strip()
+                if author.get('last_name'):
+                    full_name += " " + author.get('last_name').strip()
+                if full_name:
+                    author['full_name'] = full_name.strip()
+                if 'orcid' in author:
+                    author['orcid'] = get_orcid(author['orcid'])
+                if 'authenticated-orcid' in author:
+                    del author['authenticated-orcid']
         res_base.update(json)
     else:
         res_base['sources'] = ['html']
