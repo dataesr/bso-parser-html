@@ -47,7 +47,7 @@ def parse(doi: str, html: str, json: dict):
             for author in authors:
                 for field in author_field_correspondance:
                     if field in author:
-                        new_field = field_correspondance[field]
+                        new_field = author_field_correspondance[field]
                         author[new_field] = author[field]
                         del author[field]
         res_base.update(json)
