@@ -8,7 +8,7 @@
             "type": "array",
             "items": {
                 "type": "string",
-                "enum": ["pubmed", "html"]
+                "enum": ["pubmed", "html", "json"]
 	    }
         },
         "domains": {
