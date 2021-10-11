@@ -88,7 +88,7 @@ def parse_abstract(soup):
     if abstract_elem:
         for e in abstract_elem.next_elements:
             if e.name=="p":
-                res['abstract'] = {'abstract': get_clean_text(e)}
+                res['abstract'] = [{'abstract': get_clean_text(e)}]
                 get_clean_text(e)
                 break
                 
