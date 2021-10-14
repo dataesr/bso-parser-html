@@ -60,7 +60,7 @@ def parse(doi: str, html: str, json: dict):
                     full_name += " " + author.get('last_name').strip()
                 if full_name:
                     author['full_name'] = full_name.strip()
-                if 'orcid' in author:
+                if author.get('orcid'):
                     author['orcid'] = get_orcid(author['orcid'])
                 if 'authenticated-orcid' in author:
                     del author['authenticated-orcid']
