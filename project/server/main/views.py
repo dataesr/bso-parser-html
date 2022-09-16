@@ -33,6 +33,22 @@ def run_task_parse():
     }
     return jsonify(response_object), 202
 
+@main_blueprint.route('/parse_list', methods=['POST'])
+def run_task_parse_list():
+    args = request.get_json(force=True)
+    my_list = args.get('list', [])
+    for elt in my_list:
+        with Connection(redis.from_url(current_app.config['REDIS_URL'])):
+            q = Queue(REDIS_QUEUE, default_timeout=21600)
+            task = q.enqueue(create_task_parse, elt)
+    response_object = {
+        'status': 'success',
+        'data': {
+            'task_id': task.get_id()
+        }
+    }
+    return jsonify(response_object), 202
+
 
 @main_blueprint.route('/parse_all', methods=['POST'])
 def run_task_parse_all():
