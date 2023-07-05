@@ -105,6 +105,13 @@ def apply_fallbacks(doi, soup, current_res):
 def post_treat(current_res):
     authors = current_res.get('authors', [])
     affiliations = current_res.get('affiliations', [])
+    for aut in authors:
+        if 'affiliation' in aut and 'affiliations' not in aut:
+            if isinstance(aut['affiliation'], dict):
+                aut['affiliations'] = [aut['affiliation']]
+            elif isinstance(aut['affiliation'], list):
+                aut['affiliations'] = aut['affiliation']
+            del aut['affiliation']
     if len(authors) == 1 or len(affiliations) == 1:
         for a in authors:
             current_affiliations = a.get('affiliations', [])
@@ -113,7 +120,12 @@ def post_treat(current_res):
                     current_affiliations.append(aff)
             if current_affiliations:
                 a['affiliations'] = current_affiliations
-    
+    for aut in authors:
+        if 'affiliations' in aut and isinstance(aut['affiliations'], list):
+            for aff in aut['affiliations']:
+                if aff not in affiliations:
+                    affiliations.append(aff)
+    current_res['affiliations'] = affiliations
     has_grant = current_res.get('has_grant', False)
     current_res['has_grant'] = has_grant
 

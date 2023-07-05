@@ -126,7 +126,7 @@ def parse_abstract(soup):
     if e:
         abstr = e.findNext('p')
         if abstr:
-            res['abstract'] = {'abstract': get_clean_text(abstr)}
+            res['abstract'] = [{'abstract': get_clean_text(abstr)}]
 
     e = soup.find(id="acknowledgments")
     if e:
