@@ -32,7 +32,7 @@ def need_parsing(html: str) -> bool:
     else:
         return True
 
-def parse(doi: str, html: str, json: dict):
+def parse(doi: str, html: str, json: dict, return_input):
     logger.debug(f'PARSER -- parsing {doi}')
     res = {}
     res_base = {
@@ -41,6 +41,8 @@ def parse(doi: str, html: str, json: dict):
     }
     if json:
         res_base['sources'] = ['json']
+        if return_input:
+            res_base['input'] = json
         author_field_correspondance = {'affiliation': 'affiliations', 'given': 'first_name', 'family': 'last_name', 'ORCID': 'orcid'}
         authors = json.get('authors', [])
         if authors:
@@ -69,6 +71,8 @@ def parse(doi: str, html: str, json: dict):
         res_base['sources'] = ['html']
 
     if html:
+        if return_input:
+            res_base['input'] = html
         if not need_parsing(html=html):
             return res_base
         _exec = MAPPING.get(doi[0:7])

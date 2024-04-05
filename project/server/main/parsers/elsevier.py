@@ -23,7 +23,7 @@ def get_js(soup):
     for s in soup.find_all('script'):
         if ('type' in s.attrs) and (s.attrs['type']=='application/json'):
             try:
-                js = json.loads(get_clean_text(s))
+                js = json.loads(s.string)
             except:
                 print("ERROR in loading json ")
             break

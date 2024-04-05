@@ -48,8 +48,8 @@ def get_matcher_results(publications: list, countries_to_keep: list) -> list:
             logger.error(f'Error with task {task_id} : status {status}')
             return []
 
-def handle_parsing(doi, html, filename, json, destination_storage):
-    parsed = parse(doi=doi, html=html, json=json)
+def handle_parsing(doi, html, filename, json, destination_storage, return_input):
+    parsed = parse(doi=doi, html=html, json=json, return_input=return_input)
     all_parsed = [parsed]
     publications_with_countries = get_matcher_results(publications=all_parsed,
                                                       countries_to_keep=FRENCH_ALPHA2)
@@ -64,6 +64,7 @@ def create_task_parse(arg):
     doi = arg.get('doi')
     filename = arg.get('filename')
     json = arg.get('json')
+    return_input = arg.get('return_input', False)
     if doi is None and filename is None and json is None:
         return {'status': 'missing doi or filename or json'}
     if doi:
@@ -73,14 +74,14 @@ def create_task_parse(arg):
     if json:
         if isinstance(json, str):
             json = json.loads(json)
-        return handle_parsing(doi=doi, html=None, filename=filename, json=json, destination_storage='crossref')
+        return handle_parsing(doi=doi, html=None, filename=filename, json=json, destination_storage='crossref', return_input=return_input)
     elif filename:
         if force is False and exists_in_storage('parsed', filename) is True:
             return {'status': 'already parsed'}
         else:
             download_data_html = get_data_from_ovh(filename=filename, container='landing-page-html')
             if download_data_html:
-                return handle_parsing(doi=download_data_html.get('doi'), html=download_data_html.get('notice'), filename=filename, json=None, destination_storage='parsed')
+                return handle_parsing(doi=download_data_html.get('doi'), html=download_data_html.get('notice'), filename=filename, json=None, destination_storage='parsed', return_input=return_input)
             else:
                 logger.debug('Should crawl first')
                 return {'status': 'missing html'}
