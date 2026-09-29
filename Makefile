@@ -1,4 +1,4 @@
-DOCKER_IMAGE_NAME=dataesr/parser
+DOCKER_IMAGE_NAME=ghcr.io/dataesr/bso-parser-html
 CURRENT_VERSION=$(shell cat project/__init__.py | cut -d "'" -f 2)
 
 install:
@@ -13,8 +13,7 @@ docker-build:
 
 docker-push:
 	@echo Pushing a new docker image
-	docker push $(DOCKER_IMAGE_NAME):$(CURRENT_VERSION)
-	docker push $(DOCKER_IMAGE_NAME):latest
+	docker push -a $(DOCKER_IMAGE_NAME)
 	@echo Docker image pushed
 
 release:
